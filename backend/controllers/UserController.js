@@ -38,28 +38,33 @@ const registerUser = asyncHandler(async(req , res) =>{
 //@description to login a user
 //@route POST /api/users/login
 //@access public
-const loginUser = asyncHandler(async(req , res) =>{
-   const {email , password} = req.body;
-   if(!email || !password){
-    res.status(400);
-    throw new Error("All fieldds are mandatory")
-   }
-   const user = await User.findOne({email});
-   //compaer password with hash pasword
-   if(user && (await bcrypt.compare(password , user.hashedPassword))){
-    const accessToken = jwt.sign({
-        id : user._id,
-        isAdmin : user.isAdmin
-    } , process.env.ACCESS_TOKEN_SECRET,
-    {expiresIn : "1m"}
-    );
-    res.status(200).json({accessToken});
-   }else{
-    res.status(401)
-    throw new Error("email or password is not valid")
-   }
-    res.json({message : "login the user"})
-});
+const loginUser = asyncHandler(async (req, res) => {
+    const { email, password } = req.body;
+    if (!email || !password) {
+      res.status(400);
+      throw new Error("All fields are mandatory");
+    }
+    const user = await User.findOne({ email });
+    //compare password with hashed password
+    if (user && (await bcrypt.compare(password, user.password))) {
+      const accessToken = jwt.sign({
+        user: {
+          username: user.username,
+          email: user.email,
+          id: user.id,
+        },
+      },
+        process.env.ACCESS_TOKEN_SECRET,
+        { expiresIn: "1m" }
+      );
+      res.status(200).json({ accessToken });
+    } else {
+      res.status(401);
+      throw new Error("Email or password is not valid");
+    }
+  });
+  
+  
 
 //@description to get current user info
 //@route GET /api/users/current
