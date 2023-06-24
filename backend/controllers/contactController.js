@@ -10,7 +10,7 @@ const getContacts = asyncHandler(async(req  , res)=>{
 
 
 //@descriptio to create new contacts 
-//@route Get /api/contacts
+//@route Post /api/contacts
 //@access private
 const createContact = asyncHandler(async(req  , res)=>{
     console.log("the request body is : " , req.body)
@@ -31,7 +31,7 @@ const createContact = asyncHandler(async(req  , res)=>{
 })
 
 //@descriptio to Get new contacts 
-//@route Get /api/contacts/:id
+//@route get /api/contacts/:id
 //@access private
 const getContact = asyncHandler(async(req  , res)=>{
     const contact = await Contact.findById(req.params.id);
